@@ -13,6 +13,13 @@
         android:theme="@style/Theme.Buscaminas"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.JugarActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".Activities.NivelesActivity"
             android:exported="false">
             <meta-data

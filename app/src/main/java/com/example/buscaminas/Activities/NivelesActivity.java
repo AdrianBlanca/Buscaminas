@@ -2,6 +2,7 @@ package com.example.buscaminas.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.example.buscaminas.R;
 
 public class NivelesActivity extends AppCompatActivity {
+
+    Character nivel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,8 @@ public class NivelesActivity extends AppCompatActivity {
         textViewDatos.setText("8x8\n15 bombas");
         textViewDatos.setVisibility(View.VISIBLE);
 
+        nivel = 'E';
+
     }
 
     public void onClickMedio(View v) {
@@ -40,6 +45,8 @@ public class NivelesActivity extends AppCompatActivity {
         textViewDatos.setText("12x12\n30 bombas");
         textViewDatos.setVisibility(View.VISIBLE);
 
+        nivel = 'M';
+
     }
 
     public void onClickDificil(View v) {
@@ -51,6 +58,15 @@ public class NivelesActivity extends AppCompatActivity {
         botonAceptar.setVisibility(View.VISIBLE);
         textViewDatos.setText("16x16\n60 bombas");
         textViewDatos.setVisibility(View.VISIBLE);
+
+        nivel = 'H';
+
+    }
+
+    public void onClickAceptar(View v) {
+        Intent intent = new Intent(NivelesActivity.this, InicioActivity.class);
+        intent.putExtra("nivel", nivel);
+        startActivity(intent);
 
     }
 

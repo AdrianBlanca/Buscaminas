@@ -71,6 +71,7 @@
             android:text="ACEPTAR"
             android:layout_centerInParent="true"
             android:visibility="invisible"
+            android:onClick="onClickAceptar"
             />
     </RelativeLayout>
 </LinearLayout>

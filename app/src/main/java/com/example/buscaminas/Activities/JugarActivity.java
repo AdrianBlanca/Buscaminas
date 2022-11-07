@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.buscaminas.R;
 
@@ -15,6 +18,7 @@ public class JugarActivity extends AppCompatActivity {
     Character nivel;
     GridView gridViewMapa;
     int[][] casillas;
+    int[][] numeros;
     int nColumns;
     int nBombas;
     TextView textViewBombas;
@@ -56,15 +60,23 @@ public class JugarActivity extends AppCompatActivity {
         }
 
         casillas = new int[nColumns][nColumns];
+        numeros = new int[nColumns][nColumns];
         rellenarMapa(casillas, nColumns);
-        colocarBombas(casillas, nColumns, nBombas);
-        colocarNumeros(casillas, nColumns);
+        colocarBombas(numeros, nColumns, nBombas);
+        colocarNumeros(numeros, nColumns);
 
         gridViewMapa = findViewById(R.id.gridViewMapa);
         gridViewMapa.setNumColumns(nColumns);
         gridViewMapa.setAdapter(new GridAdapter(this, nColumns, casillas));
 
+        gridViewMapa.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ImageView imageView = (ImageView) view;
+                imageView.setImageResource(numeros[i / nColumns][i % nColumns]);
 
+            }
+        });
 
     }
 

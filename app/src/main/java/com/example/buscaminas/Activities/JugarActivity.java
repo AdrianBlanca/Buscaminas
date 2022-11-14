@@ -35,7 +35,7 @@ public class JugarActivity extends AppCompatActivity {
         nivel = 'E';
         nColumns = 8;
         nBombas = 15;
-        marcar = false;
+        marcar = true;
         textViewBombas = (TextView) findViewById(R.id.textViewBombas);
         textViewBombas.setText(String.valueOf(nBombas));
 
@@ -77,33 +77,53 @@ public class JugarActivity extends AppCompatActivity {
         gridViewMapa.setNumColumns(nColumns);
         gridViewMapa.setAdapter(new GridAdapter(this, nColumns, casillas));
 
+        gridViewMapa.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ImageView imageView = (ImageView) view;
+                TextView textView = (TextView) findViewById(R.id.textViewBombas);
+
+                if(casillas[i / 8][i % 8] == R.drawable.marked) {
+                    imageView.setImageResource(R.drawable.unopened);
+                    casillas[i / 8][i % 8] = R.drawable.unopened;
+                    textView.setText(String.valueOf(Integer.parseInt(String.valueOf(textView.getText())) + 1));
+
+                }
+
+                else if(casillas[i / 8][i % 8] == R.drawable.unopened && Integer.parseInt(String.valueOf(textView.getText())) > 0){
+                    imageView.setImageResource(R.drawable.marked);
+                    casillas[i / 8][i % 8] = R.drawable.marked;
+                    textView.setText(String.valueOf(Integer.parseInt(String.valueOf(textView.getText())) - 1));
+
+                    if(Integer.parseInt(String.valueOf(textView.getText())) == 0) {
+                        if(comprobarVictoria(numeros, casillas)) {
+                            LinearLayout linearLayoutFinPartida = (LinearLayout) findViewById(R.id.linearLayoutFinPartida);
+                            linearLayoutFinPartida.setVisibility(View.VISIBLE);
+
+                            TextView textViewFinPartida = (TextView) findViewById(R.id.textViewFinPartida);
+                            textViewFinPartida.setText("Has marcado todas las bombas. Enhorabuena!");
+
+                        }
+
+                    }
+
+                }
+
+                return true;
+            }
+        });
+
         gridViewMapa.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ImageView imageView = (ImageView) view;
+
                 if(marcar) {
-                    TextView textView = (TextView) findViewById(R.id.textViewBombas);
-
-                    if(casillas[i / 8][i % 8] == R.drawable.marked) {
-                        imageView.setImageResource(R.drawable.unopened);
-                        casillas[i / 8][i % 8] = R.drawable.unopened;
-                        textView.setText(String.valueOf(Integer.parseInt(String.valueOf(textView.getText())) + 1));
-
-
-                    }
-
-                    else if(casillas[i / 8][i % 8] == R.drawable.unopened){
-                        imageView.setImageResource(R.drawable.marked);
-                        casillas[i / 8][i % 8] = R.drawable.marked;
-                        textView.setText(String.valueOf(Integer.parseInt(String.valueOf(textView.getText())) - 1));
-
-                        if(Integer.parseInt(String.valueOf(textView.getText())) == 0) {
-                            if(comprobarVictoria(numeros, casillas)) {
-                                LinearLayout linearLayoutFinPartida = (LinearLayout) findViewById(R.id.linearLayoutFinPartida);
-                                linearLayoutFinPartida.setVisibility(View.VISIBLE);
-
-                                TextView textViewFinPartida = (TextView) findViewById(R.id.textViewFinPartida);
-                                textViewFinPartida.setText("Has marcado todas las bombas. Enhorabuena!");
+                    for(int x = 0; x < nColumns; x++) {
+                        for(int y = 0; y < nColumns; y++) {
+                            if(numeros[x][y] == R.drawable.opened) {
+                                revelar(x * nColumns + y);
+                                marcar = false;
 
                             }
 
@@ -113,68 +133,64 @@ public class JugarActivity extends AppCompatActivity {
 
                 }
 
+                switch(numeros[i / 8][i % 8]) {
+                    case R.drawable.opened:
+                        revelar(i);
+                        break;
 
-                else {
-                    switch(numeros[i / 8][i % 8]) {
-                        case R.drawable.opened:
-                            revelar(i);
-                            break;
+                    case R.drawable.one:
+                        imageView.setImageResource(R.drawable.one);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.one:
-                            imageView.setImageResource(R.drawable.one);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.two:
+                        imageView.setImageResource(R.drawable.two);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.two:
-                            imageView.setImageResource(R.drawable.two);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.three:
+                        imageView.setImageResource(R.drawable.three);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.three:
-                            imageView.setImageResource(R.drawable.three);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.four:
+                        imageView.setImageResource(R.drawable.four);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.four:
-                            imageView.setImageResource(R.drawable.four);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.five:
+                        imageView.setImageResource(R.drawable.five);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.five:
-                            imageView.setImageResource(R.drawable.five);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.six:
+                        imageView.setImageResource(R.drawable.six);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.six:
-                            imageView.setImageResource(R.drawable.six);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.seven:
+                        imageView.setImageResource(R.drawable.seven);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.seven:
-                            imageView.setImageResource(R.drawable.seven);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.eight:
+                        imageView.setImageResource(R.drawable.eight);
+                        accedido[i] = true;
+                        break;
 
-                        case R.drawable.eight:
-                            imageView.setImageResource(R.drawable.eight);
-                            accedido[i] = true;
-                            break;
+                    case R.drawable.bomb:
+                        imageView.setImageResource(R.drawable.bomb);
+                        accedido[i] = true;
+                        gridViewMapa.setOnItemClickListener(null);
 
-                        case R.drawable.bomb:
-                            imageView.setImageResource(R.drawable.bomb);
-                            accedido[i] = true;
-                            gridViewMapa.setOnItemClickListener(null);
+                        LinearLayout linearLayoutFinPartida = (LinearLayout) findViewById(R.id.linearLayoutFinPartida);
+                        linearLayoutFinPartida.setVisibility(View.VISIBLE);
 
-                            LinearLayout linearLayoutFinPartida = (LinearLayout) findViewById(R.id.linearLayoutFinPartida);
-                            linearLayoutFinPartida.setVisibility(View.VISIBLE);
+                        TextView textViewFinPartida = (TextView) findViewById(R.id.textViewFinPartida);
+                        textViewFinPartida.setText("Has detonado una bomba. Fin de la partida");
+                        textViewFinPartida.setTextColor(getResources().getColor(R.color.red));
 
-                            TextView textViewFinPartida = (TextView) findViewById(R.id.textViewFinPartida);
-                            textViewFinPartida.setText("Has detonado una bomba. Fin de la partida");
-                            textViewFinPartida.setTextColor(getResources().getColor(R.color.red));
-
-                            break;
-
-                    }
+                        break;
 
                 }
 
@@ -231,19 +247,6 @@ public class JugarActivity extends AppCompatActivity {
             }
 
         }
-
-    }
-
-    public void onClickMarcar(View v) {
-        ImageView imageView = (ImageView) findViewById(R.id.botonMarcar);
-
-        if(marcar)
-            imageView.setImageResource(R.drawable.marked);
-
-        else
-            imageView.setImageResource(R.drawable.marked_clicked);
-
-        marcar = !marcar;
 
     }
 
